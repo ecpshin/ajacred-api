@@ -1,0 +1,30 @@
+{
+	"name": "ajacred-api",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"start": "nodemon ./src/index.js"
+	},
+	"keywords": [
+		"AJACRED",
+		"AJACRED API"
+	],
+	"author": "FRANCISCO SHIN",
+	"license": "ISC",
+	"devDependencies": {
+		"nodemon": "^2.0.19"
+	},
+	"dependencies": {
+		"bcrypt": "^5.0.1",
+		"cors": "^2.8.5",
+		"dotenv": "^16.0.1",
+		"express": "^4.18.1",
+		"jsonwebtoken": "^8.5.1",
+		"knex": "^2.2.0",
+		"mysql": "^2.18.1",
+		"pg": "^8.7.3",
+		"yup": "^0.32.11",
+		"yup-locales": "^1.2.10"
+	}
+}
