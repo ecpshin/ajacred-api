@@ -7,4 +7,5 @@ const routes = require("./routes");
 server.use(cors());
 server.use(express.json());
 server.use(routes);
+
 server.listen(3334);

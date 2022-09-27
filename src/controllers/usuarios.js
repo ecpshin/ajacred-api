@@ -42,7 +42,6 @@ const createNewUser = async (req, res) => {
 			senha: yup
 				.string()
 				.min(6)
-				.max(8)
 				.required("Senha deve ter entre 6 e 8 caracteres"),
 			nivel: yup.string().required(),
 		});

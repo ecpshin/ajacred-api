@@ -1,15 +1,18 @@
-import connection from "../services/connection";
-import message from "../services/messages";
+const connection = require("../services/connection");
+const message = require("../services/messages");
 
 const getAllClients = async (_, res) => {
 	try {
-		const rs = await connection("clientes");
+		const rs = await connection("clientes")
+			.select("*")
+			.orderBy("nome", "asc");
 		if (rs.length === 0) {
 			return message(res, 404, "Nenhum cliente encontrado");
 		}
-		return messages(res, 200, rs);
+
+		return message(res, 200, rs);
 	} catch (error) {
-		return messages(res, 400, "Erro");
+		return message(res, 400, "Erro");
 	}
 };
 
