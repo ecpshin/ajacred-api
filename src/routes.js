@@ -11,6 +11,7 @@ const routes = express();
 
 routes.post("/login", userAuthenticate);
 routes.post("/usuarios", isEmailExists, usuarios.createNewUser);
+routes.get("/cliente/:id", clientes.getClientProfile);
 
 routes.use(verifyLogin);
 

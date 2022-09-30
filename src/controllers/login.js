@@ -12,7 +12,7 @@ const userAuthenticate = async (req, res) => {
 
 	const pattern = yup.object().shape({
 		email: yup.string().required(),
-		senha: yup.string().required().min(6).max(8),
+		senha: yup.string().required().min(6),
 	});
 
 	try {
@@ -35,7 +35,7 @@ const userAuthenticate = async (req, res) => {
 
 		const { senha: _, ...usuario } = result;
 		const token = jwt.sign(usuario, process.env.JWT_SECRET, {
-			expiresIn: "2h",
+			expiresIn: "8h",
 		});
 
 		const session = {

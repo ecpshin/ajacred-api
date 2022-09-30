@@ -16,6 +16,22 @@ const getAllClients = async (_, res) => {
 	}
 };
 
+const getClientProfile = async (req, res) => {
+	const { id } = req.params;
+
+	try {
+		const rs = await connection("clientes").select("*").where({ id });
+
+		if (rs.length === 0) {
+			return message(res, 404, "Cliente não encontrado");
+		}
+
+		return message(res, 200, rs);
+	} catch (error) {
+		return message(res, 400, "Erro");
+	}
+};
+
 const createNewClient = async (req, res) => {
 	const { nome, email, telefone, cpf, endereco, cidade, estado } = req.body;
 
@@ -44,5 +60,6 @@ const createNewClient = async (req, res) => {
 
 module.exports = {
 	getAllClients,
+	getClientProfile,
 	createNewClient,
 };
