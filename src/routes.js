@@ -7,14 +7,20 @@ const {
 	verifyLogin,
 	emailUpdate,
 } = require("./filters/filters");
+
+const { getAllBanks, getBankByCode } = require("./controllers/banks");
+
 const routes = express();
 
 routes.post("/login", userAuthenticate);
 routes.post("/usuarios", isEmailExists, usuarios.createNewUser);
-routes.get("/cliente/:id", clientes.getClientProfile);
+
+routes.get("/banco/:codigo", getBankByCode);
+routes.get("/banco", getAllBanks);
 
 routes.use(verifyLogin);
 
+routes.get("/cliente/:id", clientes.getClientProfile);
 routes.get("/clientes", clientes.getAllClients);
 
 routes.get("/usuarios/profile", usuarios.getUserProfile);
