@@ -5,21 +5,30 @@ const getAll = async (req, res) => {
   try {
     const rs = await query('view_contratos')
       .orderBy('finalizacao', 'desc')
-      .select();
+      .select('*');
     return res.status(200).json(rs);
-  } catch (error) {}
+  } catch (error) {
+    return res.status(500).json(error);
+  }
 };
 
-const getContractsBySituation = async (requisicao, responder) => {
+const getContractsBySituation = async (req, res) => {
   try {
     const rs = await query('view_contratos')
       .groupBy('situacao')
       .select('situacao')
       .count('situacao as quantidade');
     if (rs.length === 0) {
-      return messages(responder, 200, 'Náo há contratos registrados');
+      return messages(res, 200, 'Náo há contratos registrados');
     }
-    return responder.status(200).json(rs);
+
+    const aux = { situacao: 'TOTAL', quantidade: 0 };
+    for (let item of rs) {
+      aux.quantidade += Number(item.quantidade);
+    }
+    rs.push(aux);
+
+    return res.status(200).json(rs);
   } catch (error) {}
 };
 

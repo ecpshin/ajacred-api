@@ -1,16 +1,16 @@
-const connection = require("../services/connection");
-const message = require("../services/messages");
+const connection = require('../services/connection');
+const message = require('../services/messages');
 
 const getAllClients = async (_, res) => {
   try {
-    const rs = await connection("clientes").select("*").orderBy("nome", "asc");
+    const rs = await connection('clientes').select('*').orderBy('nome', 'asc');
     if (rs.length === 0) {
-      return message(res, 404, "Nenhum cliente encontrado");
+      return message(res, 404, 'Nenhum cliente encontrado');
     }
 
     return message(res, 200, rs);
   } catch (error) {
-    return message(res, 400, "Erro");
+    return message(res, 400, 'Erro');
   }
 };
 
@@ -18,29 +18,29 @@ const getClientProfile = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const infoResidenciais = await connection("inforesidenciais")
-      .select("cep", "logradouro", "complemento", "bairro", "municipio", "uf")
+    const infoResidenciais = await connection('inforesidenciais')
+      .select('cep', 'logradouro', 'complemento', 'bairro', 'municipio', 'uf')
       .where({
         cliente: id,
       });
 
-    const infoFuncionais = await connection("infofuncionais")
+    const infoFuncionais = await connection('infofuncionais')
       .select(
-        "id",
-        "nrbeneficio",
-        "phone1",
-        "phone2",
-        "phone3",
-        "phone4",
-        "emails",
-        "senhas"
+        'id',
+        'nrbeneficio',
+        'phone1',
+        'phone2',
+        'phone3',
+        'phone4',
+        'emails',
+        'senhas'
       )
       .where({
         cliente: id,
       });
 
-    const infoBancarias = await connection("infobancarias")
-      .select("id", "banco", "agencia", "conta", "tipo", "operacao")
+    const infoBancarias = await connection('infobancarias')
+      .select('id', 'banco', 'agencia', 'conta', 'tipo', 'operacao')
       .where({
         cliente: id,
       });
@@ -58,27 +58,16 @@ const getClientProfile = async (req, res) => {
 const getClientContracts = async (req, res) => {
   const { id } = req.params;
   try {
-    const rs = await connection("view_contratos")
+    const rs = await connection('view_contratos')
       .where({ cliente_id: id })
-      .orderBy("pid", "desc")
-      .select(
-        "pid",
-        "nome_orgao",
-        "prazo",
-        "total",
-        "parcela",
-        "liquido",
-        "operacao",
-        "situacao",
-        "nome_financeira",
-        "nome_correspondente"
-      );
+      .orderBy('pid', 'desc')
+      .select('*');
     if (rs.length === 0) {
-      return message(res, 400, "Não há registro!");
+      return message(res, 400, 'Não há registro!');
     }
     return message(res, 200, rs);
   } catch (error) {
-    return message(res, 500, "Erro do servidor!");
+    return message(res, 500, 'Erro do servidor!');
   }
 };
 
@@ -86,7 +75,7 @@ const createNewClient = async (req, res) => {
   const { nome, email, telefone, cpf, endereco, cidade, estado } = req.body;
 
   try {
-    const rs = await connection("clientes")
+    const rs = await connection('clientes')
       .insert({
         nome,
         email,
@@ -96,13 +85,13 @@ const createNewClient = async (req, res) => {
         cidade,
         estado,
       })
-      .returning("*");
+      .returning('*');
 
     if (rs.length === 0) {
-      return message(res, 400, "Não foi possível cadastrar o cliente!");
+      return message(res, 400, 'Não foi possível cadastrar o cliente!');
     }
 
-    return message(res, 200, "Cadastro realizado com sucesso!");
+    return message(res, 200, 'Cadastro realizado com sucesso!');
   } catch (error) {
     return message(res, 400, error.message);
   }
@@ -116,12 +105,12 @@ const updateClientResidencial = async (req, res) => {
     return message(
       res,
       400,
-      "Sem informações suficientes para atualizar o cadastro!"
+      'Sem informações suficientes para atualizar o cadastro!'
     );
   }
 
   try {
-    const rs = await connection("inforesidenciais")
+    const rs = await connection('inforesidenciais')
       .update({
         cep,
         logradouro,
@@ -133,13 +122,13 @@ const updateClientResidencial = async (req, res) => {
       .where({
         cliente_id: id,
       })
-      .returning("*");
+      .returning('*');
 
     if (rs.length === 0) {
-      return message(res, 400, "Não foi possível atualizar os dados!");
+      return message(res, 400, 'Não foi possível atualizar os dados!');
     }
 
-    return message(res, 204, "Dados atualizados com sucesso!");
+    return message(res, 204, 'Dados atualizados com sucesso!');
   } catch (error) {
     return message(res, 400, error.message);
   }
