@@ -33,12 +33,12 @@ const routes = express();
 routes.post('/login', userAuthenticate);
 routes.post('/usuarios', isEmailExists, usuarios.createNewUser);
 
-routes.use(verifyLogin);
-
 routes.get('/cliente/:id', clientes.getClientProfile);
 routes.get('/clientes', clientes.getAllClients);
 routes.get('/clientes/contratos/:id', clientes.getClientContracts);
+routes.post('/clientes', clientes.createNewClient);
 
+routes.use(verifyLogin);
 //Rotas de Contratos
 routes.get('/contratos', getAll);
 routes.get('/contratos/situacoes', getContractsBySituation);

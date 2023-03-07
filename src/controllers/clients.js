@@ -72,26 +72,64 @@ const getClientContracts = async (req, res) => {
 };
 
 const createNewClient = async (req, res) => {
-  const { nome, email, telefone, cpf, endereco, cidade, estado } = req.body;
+  const {
+    nome,
+    cpf,
+    nascimento,
+    rg,
+    expedicao,
+    naturalidade,
+    genitora,
+    genitor,
+    sexo,
+    estado_civil,
+    observacoes,
+    residenciais,
+    funcionais,
+    bancarias,
+  } = req.body;
 
   try {
     const rs = await connection('clientes')
       .insert({
         nome,
-        email,
-        telefone,
         cpf,
-        endereco,
-        cidade,
-        estado,
+        nascimento,
+        rg,
+        expedicao,
+        naturalidade,
+        sexo,
+        estado_civil,
+        genitora,
+        genitor,
+        observacoes,
       })
-      .returning('*');
+      .returning('id');
 
     if (rs.length === 0) {
-      return message(res, 400, 'Não foi possível cadastrar o cliente!');
+      return res.status(400).json('Erro ao tentar cadastar cliente!');
     }
 
-    return message(res, 200, 'Cadastro realizado com sucesso!');
+    const id = rs[0].id;
+
+    const rs1 = await linkTables('infobancarias', bancarias, id);
+
+    if (rs1.length === 0) {
+      return res.status(400).json('Erro bancarias');
+    }
+
+    const rs2 = await linkTables('inforesidenciais', residenciais, id);
+
+    if (rs2.length === 0) {
+      return res.status(400).json('Erro residenciais');
+    }
+
+    const rs3 = await linkTables('infofuncionais', funcionais, id);
+
+    if (rs3.length === 0) {
+      return res.status(400).json('Erro funcionais');
+    }
+    return message(res, 200, { rs });
   } catch (error) {
     return message(res, 400, error.message);
   }
@@ -137,6 +175,16 @@ const updateClientResidencial = async (req, res) => {
 const updateClientFunctional = async (req, res) => {};
 
 const updateClientBank = async (req, res) => {};
+
+const linkTables = async (table, data, id) => {
+  data.cliente = id;
+  try {
+    const rs = await connection(table).insert(data).returning('id');
+    return rs;
+  } catch (error) {
+    return [];
+  }
+};
 
 module.exports = {
   getAllClients,
