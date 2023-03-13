@@ -47,8 +47,6 @@ const getClientProfile = async (req, res) => {
         cliente: id,
       });
 
-    console.log(cliente.bancarias, cliente.funcionais, cliente.residenciais);
-
     return message(res, 200, {
       bancarias: cliente.bancarias.length !== 0 ? cliente.bancarias[0] : {},
       funcionais: cliente.funcionais.length !== 0 ? cliente.funcionais[0] : {},
