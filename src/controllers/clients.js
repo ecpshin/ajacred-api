@@ -1,14 +1,16 @@
 const connection = require('../services/connection');
 const message = require('../services/messages');
+const cliente = require('../helpers/cliente');
 
 const getAllClients = async (_, res) => {
   try {
-    const rs = await connection('clientes').select('*').orderBy('nome', 'asc');
-    if (rs.length === 0) {
+    cliente.all = await connection('clientes')
+      .select('*')
+      .orderBy('nome', 'asc');
+    if (cliente.all.length === 0) {
       return message(res, 404, 'Nenhum cliente encontrado');
     }
-
-    return message(res, 200, rs);
+    return message(res, 200, cliente.all);
   } catch (error) {
     return message(res, 400, 'Erro');
   }
@@ -18,13 +20,13 @@ const getClientProfile = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const infoResidenciais = await connection('inforesidenciais')
+    cliente.residenciais = await connection('inforesidenciais')
       .select('cep', 'logradouro', 'complemento', 'bairro', 'municipio', 'uf')
       .where({
         cliente: id,
       });
 
-    const infoFuncionais = await connection('infofuncionais')
+    cliente.funcionais = await connection('infofuncionais')
       .select(
         'id',
         'nrbeneficio',
@@ -39,16 +41,19 @@ const getClientProfile = async (req, res) => {
         cliente: id,
       });
 
-    const infoBancarias = await connection('infobancarias')
+    cliente.bancarias = await connection('infobancarias')
       .select('id', 'banco', 'agencia', 'conta', 'tipo', 'operacao')
       .where({
         cliente: id,
       });
 
+    console.log(cliente.bancarias, cliente.funcionais, cliente.residenciais);
+
     return message(res, 200, {
-      residenciais: infoResidenciais ? infoResidenciais[0] : {},
-      funcionais: infoFuncionais ? infoFuncionais[0] : {},
-      bancarias: infoBancarias ? infoBancarias[0] : {},
+      bancarias: cliente.bancarias.length !== 0 ? cliente.bancarias[0] : {},
+      funcionais: cliente.funcionais.length !== 0 ? cliente.funcionais[0] : {},
+      residenciais:
+        cliente.residenciais.length !== 0 ? cliente.residenciais[0] : {},
     });
   } catch (error) {
     return message(res, 400, error.message);
@@ -59,9 +64,9 @@ const getClientContracts = async (req, res) => {
   const { id } = req.params;
   try {
     const rs = await connection('view_contratos')
-      .where({ cliente_id: id })
+      .where('cliente_id', id)
       .orderBy('pid', 'desc')
-      .select('*');
+      .select();
     if (rs.length === 0) {
       return message(res, 400, 'Não há registro!');
     }
