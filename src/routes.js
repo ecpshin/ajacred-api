@@ -22,11 +22,8 @@ const {
   updateSituacao,
   deleteSituacao,
 } = require('./controllers/situations');
-const {
-  getAll,
-  getContractsBySituation,
-  getBySituation,
-} = require('./controllers/contracts');
+
+const contratos = require('./controllers/contratos');
 
 const routes = express();
 
@@ -40,8 +37,8 @@ routes.post('/clientes', clientes.createNewClient);
 
 routes.use(verifyLogin);
 //Rotas de Contratos
-routes.get('/contratos', getAll);
-routes.get('/contratos/situacoes', getContractsBySituation);
+routes.get('/contratos', contratos.getAll);
+routes.get('/contratos/painel', contratos.getContratosPainel);
 routes.get('/contratos/situacao', getBySituation);
 
 routes.get('/usuarios/profile', usuarios.getUserProfile);

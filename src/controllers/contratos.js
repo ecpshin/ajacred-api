@@ -12,7 +12,7 @@ const getAll = async (req, res) => {
   }
 };
 
-const getContractsBySituation = async (req, res) => {
+const getContratosPainel = async (req, res) => {
   try {
     const rs = await query('view_contratos')
       .groupBy('situacao')
@@ -45,6 +45,6 @@ const getBySituation = async (requisicao, responder) => {
 
 module.exports = {
   getAll,
-  getContractsBySituation,
+  getContratosPainel,
   getBySituation,
 };
