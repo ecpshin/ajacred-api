@@ -39,6 +39,8 @@ routes.delete('/banco/:codigo', banks.deleteBank);
 
 routes.get('/financeiras', finn.allFinanceiras);
 routes.post('/financeiras', finn.createFinanceira);
+routes.patch('/financeiras/:id', finn.patchFinanceira);
+routes.delete('/financeiras/:id', finn.deleteFinanceira);
 
 routes.get('/situacoes', situacoes.getSituacoes);
 routes.get('/situacoes/:id', situacoes.getSituacaoById);
