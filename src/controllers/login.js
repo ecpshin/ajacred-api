@@ -19,7 +19,7 @@ const userAuthenticate = async (req, res) => {
     await pattern.validate(req.body);
 
     const result = await connection('usuarios')
-      .select('id', 'nome', 'email', 'senha', 'nivel', 'avatar')
+      .select('id', 'nome', 'email', 'senha', 'nivel')
       .where({ email })
       .first();
 

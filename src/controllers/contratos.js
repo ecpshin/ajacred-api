@@ -12,7 +12,7 @@ const getAll = async (req, res) => {
   }
 };
 
-const getContratosPainel = async (req, res) => {
+const getContratosPainel = async (_, res) => {
   try {
     const rs = await query('view_contratos')
       .groupBy('situacao')
@@ -32,19 +32,24 @@ const getContratosPainel = async (req, res) => {
   } catch (error) {}
 };
 
-const getBySituation = async (requisicao, responder) => {
-  const { search } = requisicao.query;
+const getContratosPorSituacao = async (req, res) => {
+  const { situacao } = req.params;
+  let rs = [];
   try {
-    const rs = await query('view_contratos')
-      .where({ situacao: search })
-      .orderBy('finalizacao', 'desc')
-      .select();
-    responder.status(200).json(rs);
+    if (req.params) {
+      rs = await query('view_contratos')
+        .where({ situacao })
+        .orderBy('finalizacao', 'desc')
+        .select();
+      return messages(res, 200, rs);
+    }
+    rs = await query('view_contratos').orderBy('finalizacao', 'desc').select();
+    return messages(res, 200, rs);
   } catch (error) {}
 };
 
 module.exports = {
   getAll,
   getContratosPainel,
-  getBySituation,
+  getContratosPorSituacao,
 };
