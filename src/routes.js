@@ -8,11 +8,15 @@ const contratos = require('./controllers/contratos');
 const finn = require('./controllers/financeiras');
 const situacoes = require('./controllers/situations');
 const usuarios = require('./controllers/usuarios');
-
+const enums = require('./controllers/enumerators');
 const filtros = require('./filters/filters');
 
 routes.post('/login', authenticate.userAuthenticate);
 routes.post('/usuarios', filtros.isEmailExists, usuarios.createNewUser);
+
+routes.get('/tipos', enums.getTipos);
+routes.post('/tipos', enums.addTipos);
+routes.patch('/tipos/edit', enums.updateTipos);
 
 routes.use(filtros.verifyLogin);
 
