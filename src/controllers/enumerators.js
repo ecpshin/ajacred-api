@@ -37,4 +37,8 @@ const updateTipos = async (req, res) => {
   }
 };
 
-module.exports = { addTipos, getTipos, updateTipos };
+const deleteTipo = async (__, res) => {
+  return res.status(202).json('Excluído com sucesso!');
+};
+
+module.exports = { addTipos, getTipos, updateTipos, deleteTipo };
