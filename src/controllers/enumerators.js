@@ -1,5 +1,6 @@
 const fs = require('fs/promises');
 const path_tipos = './src/lists/tipos.json';
+const path_types = './src/lists/types.json';
 
 const addTipos = async (req, res) => {
   const { tipo } = req.body;
@@ -37,8 +38,34 @@ const updateTipos = async (req, res) => {
   }
 };
 
-const deleteTipo = async (__, res) => {
+const deleteTipo = async (req, res) => {
   return res.status(202).json('Excluído com sucesso!');
 };
 
-module.exports = { addTipos, getTipos, updateTipos, deleteTipo };
+const getTypesOrgaos = async (req, res) => {
+  try {
+    const arquivo = await fs.readFile('./src/lists/types.json', 'utf-8');
+    const tipos = JSON.parse(arquivo);
+    return res.status(200).json(tipos);
+  } catch (error) {
+    console.error(error.message);
+    return res.status(500).json(error);
+  }
+};
+
+const setTypesOrgaos = async (req, res) => {};
+
+const patchTypesOrgaos = async (req, res) => {};
+
+const deleteTypesOrgaos = async (req, res) => {};
+
+module.exports = {
+  addTipos,
+  getTipos,
+  updateTipos,
+  deleteTipo,
+  setTypesOrgaos,
+  getTypesOrgaos,
+  deleteTypesOrgaos,
+  patchTypesOrgaos,
+};
