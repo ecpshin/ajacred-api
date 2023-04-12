@@ -76,38 +76,15 @@ const getClientContracts = async (req, res) => {
 
 const createNewClient = async (req, res) => {
   const {
-    nome,
-    cpf,
-    nascimento,
-    rg,
-    expedicao,
-    naturalidade,
-    genitora,
-    genitor,
-    sexo,
-    estado_civil,
-    observacoes,
-    residenciais,
-    funcionais,
-    bancarias,
+    form: cliente,
+    address: residenciais,
+    funcao: funcionais,
+    finance: bancarias,
   } = req.body;
 
+  console.log(cliente, bancarias, funcionais, residenciais);
   try {
-    const rs = await connection('clientes')
-      .insert({
-        nome,
-        cpf,
-        nascimento,
-        rg,
-        expedicao,
-        naturalidade,
-        sexo,
-        estado_civil,
-        genitora,
-        genitor,
-        observacoes,
-      })
-      .returning('id');
+    const rs = await connection('clientes').insert(cliente).returning('id');
 
     if (rs.length === 0) {
       return res.status(400).json('Erro ao tentar cadastar cliente!');
@@ -132,9 +109,9 @@ const createNewClient = async (req, res) => {
     if (rs3.length === 0) {
       return res.status(400).json('Erro funcionais');
     }
-    return message(res, 200, { rs });
+    return message(res, 201, 'Cliente cadastrado com sucesso!');
   } catch (error) {
-    return message(res, 400, error.message);
+    return message(res, 500, 'Erro no servidor');
   }
 };
 

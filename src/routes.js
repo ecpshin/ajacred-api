@@ -8,14 +8,23 @@ const contratos = require('./controllers/contratos');
 const finn = require('./controllers/financeiras');
 const situacoes = require('./controllers/situations');
 const usuarios = require('./controllers/usuarios');
-
+const orgaos = require('./controllers/orgaos');
+const enums = require('./controllers/enumerators');
 const filtros = require('./filters/filters');
 
 routes.post('/login', authenticate.userAuthenticate);
 routes.post('/usuarios', filtros.isEmailExists, usuarios.createNewUser);
 
+routes.get('/tipos', enums.getTipos);
+routes.post('/tipos', enums.addTipos);
+routes.patch('/tipos/edit', enums.updateTipos);
+
+routes.get('/orgaos/type', enums.getTypesOrgaos);
+routes.get('/orgaos', orgaos.getAll);
+
 routes.use(filtros.verifyLogin);
 
+//Rotas de Clientes
 routes.get('/cliente/:id', clientes.getClientProfile);
 routes.get('/clientes', clientes.getAllClients);
 routes.get('/clientes/contratos/:id', clientes.getClientContracts);
