@@ -24,6 +24,7 @@ routes.get('/orgaos', orgaos.getAll);
 
 routes.use(filtros.verifyLogin);
 
+//Rotas de Clientes
 routes.get('/cliente/:id', clientes.getClientProfile);
 routes.get('/clientes', clientes.getAllClients);
 routes.get('/clientes/contratos/:id', clientes.getClientContracts);
