@@ -29,6 +29,7 @@ routes.get('/cliente/:id', clientes.getClientProfile);
 routes.get('/clientes', clientes.getAllClients);
 routes.get('/clientes/contratos/:id', clientes.getClientContracts);
 routes.post('/clientes', clientes.createNewClient);
+routes.patch('/clientes/:id', clientes.patchClient);
 
 //Rotas de Contratos
 routes.get('/contratos/', contratos.getAll);

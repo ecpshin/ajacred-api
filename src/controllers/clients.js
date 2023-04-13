@@ -12,7 +12,7 @@ const getAllClients = async (_, res) => {
     }
     return message(res, 200, cliente.all);
   } catch (error) {
-    return message(res, 400, 'Erro');
+    return message(res, 500, error);
   }
 };
 
@@ -115,6 +115,49 @@ const createNewClient = async (req, res) => {
   }
 };
 
+const patchClient = async (req, res) => {
+  const person = { ...req.body };
+  person.expedicao = person.expedicao.split('T')[0];
+  person.nascimento = person.nascimento.split('T')[0];
+  const {
+    nome,
+    cpf,
+    rg,
+    expedicao,
+    nascimento,
+    naturalidade,
+    genitora,
+    genitor,
+    sexo,
+    estado_civil,
+    observacoes,
+  } = person;
+
+  const person_id = req.params.id;
+
+  try {
+    const resource = await connection('clientes')
+      .update({
+        nome,
+        cpf,
+        rg,
+        expedicao,
+        nascimento,
+        naturalidade,
+        genitora,
+        genitor,
+        sexo,
+        estado_civil,
+        observacoes,
+      })
+      .where('id', Number(person_id));
+    return res.status(200).json(resource);
+  } catch (e) {
+    console.log(e);
+    return res.status(400).json(e);
+  }
+};
+
 const updateClientResidencial = async (req, res) => {
   const { id } = req.params;
   const { cep, logradouro, complemento, bairro, municipio, uf } = req.body;
@@ -171,6 +214,7 @@ module.exports = {
   getClientProfile,
   getClientContracts,
   createNewClient,
+  patchClient,
   updateClientBank,
   updateClientFunctional,
   updateClientResidencial,
