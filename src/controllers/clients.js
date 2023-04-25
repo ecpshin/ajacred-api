@@ -1,12 +1,10 @@
-const connection = require('../services/connection');
+const query = require('../services/connection');
 const message = require('../services/messages');
 const cliente = require('../helpers/cliente');
 
 const getAllClients = async (_, res) => {
   try {
-    cliente.all = await connection('clientes')
-      .select('*')
-      .orderBy('nome', 'asc');
+    cliente.all = await query('clientes').select('*').orderBy('nome', 'asc');
     if (cliente.all.length === 0) {
       return message(res, 404, 'Nenhum cliente encontrado');
     }
@@ -20,13 +18,13 @@ const getClientProfile = async (req, res) => {
   const { id } = req.params;
 
   try {
-    cliente.residenciais = await connection('inforesidenciais')
+    cliente.residenciais = await query('inforesidenciais')
       .select('cep', 'logradouro', 'complemento', 'bairro', 'municipio', 'uf')
       .where({
         cliente: id,
       });
 
-    cliente.funcionais = await connection('infofuncionais')
+    cliente.funcionais = await query('infofuncionais')
       .select(
         'id',
         'nrbeneficio',
@@ -41,7 +39,7 @@ const getClientProfile = async (req, res) => {
         cliente: id,
       });
 
-    cliente.bancarias = await connection('infobancarias')
+    cliente.bancarias = await query('infobancarias')
       .select('id', 'banco', 'agencia', 'conta', 'tipo', 'operacao')
       .where({
         cliente: id,
@@ -58,10 +56,10 @@ const getClientProfile = async (req, res) => {
   }
 };
 
-const getClientContracts = async (req, res) => {
+async function getClientContracts(req, res) {
   const { id } = req.params;
   try {
-    const rs = await connection('view_contratos')
+    const rs = await query('view_contratos')
       .where('cliente_id', id)
       .orderBy('pid', 'desc')
       .select();
@@ -72,7 +70,7 @@ const getClientContracts = async (req, res) => {
   } catch (error) {
     return message(res, 500, 'Erro do servidor!');
   }
-};
+}
 
 const createNewClient = async (req, res) => {
   const {
@@ -84,7 +82,7 @@ const createNewClient = async (req, res) => {
 
   console.log(cliente, bancarias, funcionais, residenciais);
   try {
-    const rs = await connection('clientes').insert(cliente).returning('id');
+    const rs = await query('clientes').insert(cliente).returning('id');
 
     if (rs.length === 0) {
       return res.status(400).json('Erro ao tentar cadastar cliente!');
@@ -136,7 +134,7 @@ const patchClient = async (req, res) => {
   const person_id = req.params.id;
 
   try {
-    const resource = await connection('clientes')
+    const resource = await query('clientes')
       .update({
         nome,
         cpf,
@@ -171,7 +169,7 @@ const updateClientResidencial = async (req, res) => {
   }
 
   try {
-    const rs = await connection('inforesidenciais')
+    const rs = await query('inforesidenciais')
       .update({
         cep,
         logradouro,
@@ -202,7 +200,7 @@ const updateClientBank = async (req, res) => {};
 const linkTables = async (table, data, id) => {
   data.cliente = id;
   try {
-    const rs = await connection(table).insert(data).returning('id');
+    const rs = await query(table).insert(data).returning('id');
     return rs;
   } catch (error) {
     return [];
