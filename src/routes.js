@@ -31,10 +31,11 @@ routes.get('/clientes/contratos/:id', clientes.getClientContracts);
 routes.post('/clientes', clientes.createNewClient);
 routes.patch('/clientes/:id', clientes.patchClient);
 
-//Rotas de Contratos
+//Rotas de Contratos (Painel)
 routes.get('/contratos/', contratos.getAll);
 routes.get('/contratos/:situacao/situacao', contratos.getContratosPorSituacao);
 routes.get('/contratos/painel', contratos.getContratosPainel);
+routes.post('/contrato', contratos.createContract);
 
 routes.get('/usuarios/profile', usuarios.getUserProfile);
 routes.get('/usuarios', usuarios.getAllUsers);

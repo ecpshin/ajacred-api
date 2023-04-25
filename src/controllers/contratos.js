@@ -1,3 +1,4 @@
+const { randomUUID } = require('crypto');
 const query = require('../services/connection');
 const messages = require('../services/messages');
 
@@ -48,8 +49,27 @@ const getContratosPorSituacao = async (req, res) => {
   } catch (error) {}
 };
 
+const createContract = async (req, res) => {
+  const body = req.body;
+  const data = { ...body, nrcontrole: randomUUID() };
+  try {
+    const rs = await query('contratos').insert(data, ['pid']);
+    if (!rs || rs.length === 0) {
+      return messages(
+        res,
+        400,
+        'Não foi possível realizar cadastro de contrato!'
+      );
+    }
+    return messages(res, 201, rs);
+  } catch (error) {
+    return messages(res, 500, error.message);
+  }
+};
+
 module.exports = {
   getAll,
   getContratosPainel,
   getContratosPorSituacao,
+  createContract,
 };
