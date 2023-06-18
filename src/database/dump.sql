@@ -76,6 +76,7 @@ INSERT INTO "usuarios" ("nome", "email", "senha", "nivel", "avatar", "regdate") 
 	('Jussara Ribeiro', 'ajacred3@gmail.com', '$2b$12$G1EvHZ/zoCzvgzMiV1oKu.fEfqArA2FeLb9AwsW3eG/jd13631l.a', 'ROLE_USER', 'man.png', '2022-09-26 17:02:06.53032-03'),
 	('Nycoli Fernandes', 'ajacredc@gmail.com', '$2b$12$oLVAiOvuqswSGu9cqiNO9.rtKvfIDwF1L/Qe5WbctOuuupdwG6LxG', 'ROLE_USER', 'man.png', '2022-09-26 17:02:43.264437-03'
 );
+
 CREATE TABLE IF NOT EXISTS bancos (
 	codigo VARCHAR(10) NOT NULL,
 	nome TEXT NOT NULL

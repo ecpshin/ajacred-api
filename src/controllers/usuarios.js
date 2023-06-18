@@ -34,8 +34,6 @@ const getUserProfile = async (req, res) => {
 
 const createNewUser = async (req, res) => {
   const { nome, email, senha, nivel, avatar } = req.body;
-
-  console.log('Chegou aqui');
   try {
     const schema = yup.object().shape({
       nome: yup.string().required(),

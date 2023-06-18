@@ -9,4 +9,6 @@ server.use(cors());
 server.use(express.json());
 server.use(routes);
 
-server.listen(3334);
+server.listen(process.env.APP_PORT, function(){
+    console.log("Lintening POR: " + process.env.APP_PORT);
+});
