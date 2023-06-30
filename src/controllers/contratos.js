@@ -1,9 +1,10 @@
-const query = require('../services/connection');
+const knex = require('../services/connection');
 const messages = require('../services/messages');
+const uuid = require('uuid');
 
-const getAll = async (req, res) => {
+const getAll = async (__, res) => {
   try {
-    const rs = await query('view_contratos')
+    const rs = await knex('view_contratos')
       .orderBy('finalizacao', 'desc')
       .select('*');
     return res.status(200).json(rs);
@@ -14,12 +15,13 @@ const getAll = async (req, res) => {
 
 const getContratosPainel = async (_, res) => {
   try {
-    const rs = await query('view_contratos')
+    const rs = await knex('view_contratos')
       .groupBy('situacao')
       .select('situacao')
       .count('situacao as quantidade');
+
     if (rs.length === 0) {
-      return messages(res, 200, 'Náo há contratos registrados');
+      return messages(res, 204, []);
     }
 
     const aux = { situacao: 'TOTAL', quantidade: 0 };
@@ -37,18 +39,47 @@ const getContratosPorSituacao = async (req, res) => {
   let rs = [];
   try {
     if (req.params) {
-      rs = await query('view_contratos')
+      rs = await knex('view_contratos')
         .where({ situacao })
         .orderBy('finalizacao', 'desc')
         .select();
       return messages(res, 200, rs);
     }
-    rs = await query('view_contratos').orderBy('finalizacao', 'desc').select();
+    rs = await knex('view_contratos').orderBy('finalizacao', 'desc').select();
     return messages(res, 200, rs);
   } catch (error) {}
 };
 
+const createNewContract = async (req, res) => {
+  const data = req.body;
+  data.prazo = converteNumero(data.prazo);
+  data.total = converteNumero(data.total);
+  data.parcela = converteNumero(data.parcela);
+  data.liquido = converteNumero(data.liquido);
+  data.percentual = converteNumero(data.percentual);
+  data.nrcontrole = uuid.v4();
+
+  try {
+    const rs = await knex('contratos').insert(data).returning('*');
+    if (rs.length === 0) {
+      return res.status(400).json('Erro ao tentar cadastar contrato!');
+    }
+     console.log(rs);
+     return messages(res, 201, rs);
+    
+  } catch (error) {
+     return messages(res, 500, 'Erro ao tentar adicionar contrato');
+  }
+
+}
+
+const converteNumero = (valor) => {
+  return Number(valor);
+}
+
+
 module.exports = {
+  createNewContract,
   getAll,
   getContratosPainel,
   getContratosPorSituacao,

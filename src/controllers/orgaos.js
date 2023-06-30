@@ -12,6 +12,17 @@ const getAll = async (__, res) => {
   }
 };
 
+const newOrgao = async (req, res) => {
+  const data = req.body
+  try {
+    await knex('orgaos').insert(data)
+    return res.status(201).json({})    
+  } catch (error) {
+    return res.status(500).json({"mensagem":"Erro do servidor"})
+  }
+}
+
 module.exports = {
   getAll,
+  newOrgao
 };

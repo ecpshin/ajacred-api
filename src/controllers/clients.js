@@ -60,14 +60,14 @@ const getClientProfile = async (req, res) => {
 
 const getClientContracts = async (req, res) => {
   const { id } = req.params;
+  
   try {
-    const rs = await connection('view_contratos')
-      .where('cliente_id', id)
-      .orderBy('pid', 'desc')
-      .select();
+    const rs = await connection('view_contratos').where('cliente_id', id).orderBy('pid', 'desc').select();
+        
     if (rs.length === 0) {
-      return message(res, 400, 'Não há registro!');
+      return message(res, 204, []);
     }
+
     return message(res, 200, rs);
   } catch (error) {
     return message(res, 500, 'Erro do servidor!');
@@ -82,7 +82,6 @@ const createNewClient = async (req, res) => {
     finance: bancarias,
   } = req.body;
 
-  console.log(cliente, bancarias, funcionais, residenciais);
   try {
     const rs = await connection('clientes').insert(cliente).returning('id');
 
